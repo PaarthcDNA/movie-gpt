@@ -3,7 +3,7 @@ import {signValidator} from "./signValidator";
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword  } from "firebase/auth"; 
 import { auth } from "./utils/firebase";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+
 import { addUser, removeUser  } from "./utils/userSlice";
 import { getAuth,updateProfile } from "firebase/auth";
 const SignInUp = () => {
@@ -14,7 +14,7 @@ const SignInUp = () => {
     const name = useRef(null);
 
     const navigate = useNavigate();
-    const dispatch  = useDispatch()
+
 
     const ToggleSignUp = () => {
       //Signin Signout

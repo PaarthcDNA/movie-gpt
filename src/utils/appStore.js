@@ -6,5 +6,3 @@ const appStore =  configureStore(
     user:userReducer  
   }
     })
-
-export default appStore

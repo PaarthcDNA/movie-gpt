@@ -3,14 +3,14 @@ import Logo from "./utils/Netflix_Logo_PMS.png"
 import SignInUp from "./SignInUp"
 import { useEffect } from "react"
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useDispatch } from "react-redux";
+
 import { addUser, removeUser } from "./utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 
 const LoginScreen = () => {
     const auth = getAuth();
-    const dispatch  = useDispatch()
+   
     const navigate = useNavigate();
     
 
