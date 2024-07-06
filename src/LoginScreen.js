@@ -1,16 +1,28 @@
 import { BG_URL } from "./utils/constants"
 import Logo from "./utils/Netflix_Logo_PMS.png"
 import SignInUp from "./SignInUp"
+import { useEffect } from "react"
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { addUser, removeUser } from "./utils/userSlice";
+import { useNavigate } from "react-router-dom";
+import Header from "./Header";
+
 const LoginScreen = () => {
+    const auth = getAuth();
+    const dispatch  = useDispatch()
+    const navigate = useNavigate();
+    
+
+
+    
     return(
         <div className="Login Page">
 
         
-                <div className="absolute  bg-gradient-to-b from-black  ">
-                <img className=" w-44" src={Logo}></img>
-                </div>
+                <Header/>
                 
-                <SignInUp></SignInUp>
+                <SignInUp/>
                 <img src={BG_URL}></img>
          
 
