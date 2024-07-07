@@ -5,12 +5,13 @@ import Browser from "./browse";
 
 
 import ProtectedRoute from "./utils/protectedRoute";
+import SignInChecker from "./utils/signInChecker";
 function App() {
 
     const appRouter = createBrowserRouter([
         {path:"/",
             element:
-            <LoginScreen/>
+            <SignInChecker><LoginScreen/></SignInChecker>
            
         },
         {
