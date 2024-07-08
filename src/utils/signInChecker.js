@@ -24,9 +24,6 @@ const SignInChecker = ({ children }) => {
         return <div>Loading...</div>; // Or any loading indicator you prefer
     }
 
-    if (user) {
-        return <Navigate to="/browse" />;
-    }
 
     return children;
 };

@@ -1,131 +1,138 @@
-import { useRef, useState } from "react"
-import {signValidator} from "./signValidator";
-import { createUserWithEmailAndPassword,signInWithEmailAndPassword  } from "firebase/auth"; 
+import { useRef, useState } from "react";
+import { signValidator } from "./signValidator";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "./utils/firebase";
 import { useNavigate } from "react-router-dom";
-
-import { addUser, removeUser  } from "./utils/userSlice";
-import { getAuth,updateProfile } from "firebase/auth";
+//loafding is used for checking cred message
 const SignInUp = () => {
-    const[ToggleSign,setToggleSign] = useState(true)
-    const[errorMessage,setErrorMessage] = useState()
-    const email = useRef(null);
-    const password = useRef(null);
-    const name = useRef(null);
-    const [checkSignUp,setCheckSignUp]= useState(false);
+    const [toggleSign, setToggleSign] = useState(true);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
+    const [signUpSuccess, setSignUpSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-    const[signUpSuccess,setSignUpSuccess] = useState(false);
 
     const ToggleSignUp = () => {
-      //Signin Signout
-            setToggleSign(!ToggleSign)
-           
-    }
+        setToggleSign(!toggleSign);
+        setErrorMessage(null);
+        setSignUpSuccess(false);
+    };
 
     const addDisplayName = () => {
-      updateProfile(auth.currentUser, {
-        displayName: name.current.value
-      }).then(() => {
-        email.current.value = ' ';
-        password.current.value = '';
-        name.current.value = '';
-        
-      }).catch((error) => {
-        // An error occurred
-        // ...
-      });
-    }
-
-    
-
-
-
+        updateProfile(auth.currentUser, {
+            displayName: name
+        }).then(() => {
+            setEmail("");
+            setPassword("");
+            setName("");
+        }).catch((error) => {
+            console.error(error);
+        });
+    };
 
     const Validator = () => {
-        const message = signValidator(email.current.value,password.current.value)
+        const message = signValidator(email, password);
         setErrorMessage(message);
-        if(message) return
-       
-        if(ToggleSign){        createUserWithEmailAndPassword(auth,email.current.value,password.current.value)
-            .then((userCredential) => {
-              // Signed up 
-            
-              const user = userCredential.user;
-              const {uid,email,displayName} = user;
-              
-              //dispatch(addUser({uid:uid,email:email,displayName:name.current.value}))
-              addDisplayName();
-              setSignUpSuccess(true);
-             
-              
+        if (message) return;
 
-            })
-            .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              console.log(errorMessage)
-              setErrorMessage(errorMessage);
-              // ..
-            }); }
-            if(!ToggleSign){
-                
-                signInWithEmailAndPassword(auth, email.current.value,password.current.value)
-                  .then((userCredential) => {
-                    // Signed in 
-                    const user = userCredential.user;
-                   
-                    email.current.value = ' ';
-                    password.current.value = '';
-                    navigate('/browse')
-                    
-                  })
-                  .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorMessage)
-                    setErrorMessage(errorMessage)
-                  });                
-            }
-     
+        setLoading(true);
+        if (toggleSign) {
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                  
 
+                  
+                    addDisplayName();
+                    setSignUpSuccess(true);
+                    setEmail("");
+                  setPassword("");
+                  setName("")
+                })
+                .catch((error) => {
+                    setErrorMessage(error.message);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        } else {
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    setEmail("");
+                    setPassword("");
 
+                    navigate('/browse');
+                })
+                .catch((error) => {
+                    setErrorMessage(error.message);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
+    };
 
-
-
-
-
-    }
-
-   return( <div className="absolute  w-full my-40">
-        <div className="bg-black opacity-70 w-4/12 flex justify-center mx-auto h-[500px]">
-        <div className="flex flex-col justify-center w-6/12">
-        {!ToggleSign ? <p className="m-auto text-white  font-bold text-3xl my-4">Sign In</p> : <p className="m-auto text-white  font-bold text-3xl my-4">Sign Up</p>}
-
-      
-        <form onSubmit={(e)=>{e.preventDefault();
-          
-        }} className="flex justify-center flex-col">
-
-        {(!ToggleSign)?<input ref = {name} type="hidden" placeholder="Name " className="p-2 my-4 bg-gray-700 text-white"></input>:<input type="text" ref={name} placeholder="Name " className="p-2 my-4 bg-gray-700 text-white"></input>}
-        <input type="email" ref={email} placeholder="Email " className="p-2 my-4 bg-gray-700 text-white"></input>
-        <input type="password" ref={password} placeholder="Password" className="p-2 my-4 bg-gray-700 text-white"></input>
-        <input type="submit"value="Submit" onClick={()=>{Validator();setCheckSignUp(true)
-          
-        }}  className="p-2 mt-4   text-white bg-red-600 w-full"></input>
-        </form>
-
-        {ToggleSign && signUpSuccess && <p className="text-red-600 flex justify-center py-3">Signup Success! Signin to continue!</p>}
-        {checkSignUp && <p className="text-red-600 flex justify-center py-3">Checking Credentials...Please Wait</p>}
-        <p className="text-red-600">{errorMessage}</p>
-        {!ToggleSign?<p className="mx-auto mb-8 text-white  font-bold text-sm hover:cursor-pointer" onClick={()=>{ToggleSignUp();setErrorMessage(null)}}>Not a user ? Sign Up</p>:<p className="mx-auto mb-8 text-white  font-bold text-sm hover:cursor-pointer" onClick={()=>{ToggleSignUp();setErrorMessage(null)}}>Already a user ? Sign In</p>}
-
-
-        
-
+    return (
+        <div className="absolute w-full my-40">
+            <div className="bg-black opacity-70 w-4/12 flex justify-center mx-auto h-[500px]">
+                <div className="flex flex-col justify-center w-6/12">
+                    <p className="m-auto text-white font-bold text-3xl my-4">
+                        {toggleSign ? "Sign Up" : "Sign In"}
+                    </p>
+                    <form onSubmit={(e) => e.preventDefault()} className="flex justify-center flex-col">
+                        {toggleSign && (
+                            <input 
+                                type="text" 
+                                value={name}
+                                onChange={(e) => setName(e.target.value)} 
+                                placeholder="Name" 
+                                className="p-2 my-4 bg-gray-700 text-white" 
+                            />
+                        )}
+                        <input 
+                            type="email" 
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)} 
+                            placeholder="Email" 
+                            className="p-2 my-4 bg-gray-700 text-white" 
+                        />
+                        <input 
+                            type="password" 
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)} 
+                            placeholder="Password" 
+                            className="p-2 my-4 bg-gray-700 text-white" 
+                        />
+                        <input 
+                            type="submit" 
+                            value="Submit" 
+                            onClick={() => Validator()} 
+                            className="p-2 mt-4 text-white bg-red-600 w-full" 
+                        />
+                    </form>
+                    {!toggleSign && loading && (
+                        <p className="text-red-600 flex justify-center py-3">
+                            Checking Credentials...Please Wait
+                        </p>
+                    )}
+                    {toggleSign && signUpSuccess && !loading && (
+                        <p className="text-red-600 flex justify-center py-3">
+                            Signup Success! Signin to continue!
+                        </p>
+                    )}
+                    <p className="text-red-600">{errorMessage}</p>
+                    <p 
+                        className="mx-auto mb-8 text-white font-bold text-sm hover:cursor-pointer" 
+                        onClick={ToggleSignUp}
+                    >
+                        {toggleSign ? "Already a user? Sign In" : "Not a user? Sign Up"}
+                    </p>
+                </div>
+            </div>
         </div>
+    );
+};
 
-        </div>
-    </div>)
-}
 export default SignInUp;
