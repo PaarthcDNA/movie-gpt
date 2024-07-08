@@ -31,7 +31,8 @@ const Header = () => {
 
   return (
     <div className="relative">
-      <div className="absolute w-screen bg-black flex justify-between">
+        {/* Your logo component */}
+      <div className={currentUser?"absolute w-screen bg-black flex justify-between":"absolute w-screen bg-gradient-to-b flex justify-between"}>
         {/* Your logo component */}
         <img className="w-44 z-10 pt-2" src={Logo} alt="Netflix Logo" />
 
@@ -39,8 +40,8 @@ const Header = () => {
         <div className="w-screen flex justify-end items-center pr-8">
           {currentUser ? ( // If currentUser exists (user is signed in)
             <div className="flex items-center z-10">
-              <p className="  text-white p-4 px-6 font-bold ">Hi {currentUser.displayName}</p>
-              <p className="text-white p-4 cursor-pointer font-bold px-6" onClick={signOutApp}>
+              <p className="  text-white bg-black p-4 px-6 font-bold ">Hi {currentUser.displayName}</p>
+              <p className="text-white bg-black p-4 cursor-pointer font-bold px-6" onClick={signOutApp}>
                 SignOut
               </p>
             </div>
