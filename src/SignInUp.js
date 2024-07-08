@@ -74,7 +74,7 @@ const SignInUp = () => {
                   .then((userCredential) => {
                     // Signed in 
                     const user = userCredential.user;
-                    console.log(user)
+                   
                     email.current.value = ' ';
                     password.current.value = '';
                     navigate('/browse')

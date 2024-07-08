@@ -1,82 +1,58 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import Logo from "./utils/Netflix_Logo_PMS.png"
-import { getAuth, signOut} from "firebase/auth";
-
-
-
-
-
-
 
 const Header = () => {
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
 
-
-
-
-
-    const navigate = useNavigate()
-
-
-    const displayName  =()=> {
-        const auth = getAuth();
-        const user = auth.currentUser;
-        if (user !== null) {
-          // The user object has basic properties such as display name, email, etc.
-          const displayName = user.displayName;
-          const email = user.email;
-        
-        
-          // The user's ID, unique to the Firebase project. Do NOT use
-          // this value to authenticate with your backend server, if
-          // you have one. Use User.getToken() instead.
-
-
-          return displayName;
-        
-        }
-        return null;
-        
-            }
-
-
-
-
-    const signOutApp = () => {
-   
-
-        const auth = getAuth();
-    
-        signOut(auth).then(() => {
-      // Sign-out successful.
-      //dispatch(removeUser())
-      navigate("/")
-    }).catch((error) => {
-      // An error happened.
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if(user){
+      setCurrentUser(user); }
+      else{navigate('/')}// Update currentUser state based on auth state
     });
-    }
 
+    return () => unsubscribe(); // Cleanup function to unsubscribe listener
+  }, []);
 
+  const signOutApp = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Sign out error", error);
+      });
+  };
 
-    return(
-        <div className="flex w-screen justify-between ">
+  return (
+    <div className="relative">
+      <div className="absolute w-screen bg-black flex justify-between">
+        {/* Your logo component */}
+        <img className="w-44 z-10 pt-2" src={Logo} alt="Netflix Logo" />
 
-            
-        <div className="absolute  bg-gradient-to-b from-black  z-10">
-        <img className=" w-44" src={Logo}></img>
+        {/* Displaying current user's name and sign out button */}
+        <div className="w-screen flex justify-end items-center pr-8">
+          {currentUser ? ( // If currentUser exists (user is signed in)
+            <div className="flex items-center z-10">
+              <p className="  text-white p-4 px-6 font-bold ">Hi {currentUser.displayName}</p>
+              <p className="text-white p-4 cursor-pointer font-bold px-6" onClick={signOutApp}>
+                SignOut
+              </p>
+            </div>
+          ) : (
+            <p className="text-white cursor-pointer " onClick={() => navigate("/")}>
+              
+            </p>
+          )}
         </div>
-
-
-        <div className="absolute right-0 text-black hover:cursor-pointer ">
-            
-          {displayName() &&  <div className="flex"><p  className="px-8">Hi {displayName()    } </p> <p onClick={signOutApp}>SignOut</p> </div>         }
-            
-           
-        </div>
-
-        </div>
-        
-        
-    )
-}
+      </div>
+    </div>
+  );
+};
 
 export default Header;
