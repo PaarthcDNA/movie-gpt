@@ -1,27 +1,24 @@
 
 import Header from "./Header";
-import useNowPlayingMovies from "./useNowPlayingMovies";
+import useNowPlayingMovies from "./Hooks/useNowPlayingMovies";
 import MainContainer from "./mainContainer";
-import SecondaryContainer from "./secondaryContainer";
+import useUpcomingMovies from "./Hooks/useUpcomingMovies";
+import usePopularMovies from "./Hooks/usePopularMovies";
+import { addPopularMovies } from "./utils/moviesSlice";
+import useTopRatedMovies from "./Hooks/useTopRated";
 const Browser = () => {
-    
+    //sends the data to store
     useNowPlayingMovies()
+    usePopularMovies();
+    useUpcomingMovies();
+    useTopRatedMovies();
+    
     return(
         <div>
            <Header/>
-            {/*
-            Main Container
-            -Video Background
-            -Video Title
-            Secondary Container
-            -MovieList * n
-            -card*n
-            
-            
-            */}
-
+          
             <MainContainer/>
-            <SecondaryContainer/>
+         
 
 
         </div>

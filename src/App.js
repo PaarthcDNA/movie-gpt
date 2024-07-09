@@ -19,7 +19,7 @@ function App() {
         {
             path:"/browse",
 
-            element:<Provider store={appStore}><ProtectedRoute><Browser/></ProtectedRoute></Provider>
+            element:<Provider store={appStore}><Browser/></Provider>
         },
 
     ]);

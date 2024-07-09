@@ -18,9 +18,9 @@ const LoginScreen = () => {
     
     return(
         <div className="Login Page">
-
+            <img className=" absolute w-44 z-10 pt-2" src={Logo} alt="Netflix Logo" />
         
-                <Header/>
+
                 
                 <SignInUp/>
                 <img src={BG_URL}></img>

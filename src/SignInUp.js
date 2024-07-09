@@ -3,6 +3,7 @@ import { signValidator } from "./signValidator";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "./utils/firebase";
 import { useNavigate } from "react-router-dom";
+import Header from "./Header";
 //loafding is used for checking cred message
 const SignInUp = () => {
     const [toggleSign, setToggleSign] = useState(true);
@@ -75,6 +76,8 @@ const SignInUp = () => {
     };
 
     return (
+      <div>
+        
         <div className="absolute w-full my-40">
             <div className="bg-black opacity-70 w-4/12 flex justify-center mx-auto h-[500px]">
                 <div className="flex flex-col justify-center w-6/12">
@@ -131,6 +134,7 @@ const SignInUp = () => {
                     </p>
                 </div>
             </div>
+        </div>
         </div>
     );
 };
