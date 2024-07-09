@@ -18,8 +18,9 @@ const LoginScreen = () => {
     
     return(
         <div className="Login Page">
-            <img className=" absolute w-44 z-10 pt-2" src={Logo} alt="Netflix Logo" />
-        
+            <div className= " absolute w-screen bg-gradient-to-b z-20 from-black">
+            <img className="  w-44 z-10 pt-\1  "src={Logo} alt="NetflixLogo" />
+            </div>
 
                 
                 <SignInUp/>
