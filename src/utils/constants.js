@@ -20,3 +20,5 @@ export const SUPPORTED_LANGUAGES =
   { identifier: "french", name: "French" },
   { identifier: "german", name: "German" }
 ];
+
+export const MOVIE_DATA_API = "https://api.themoviedb.org/3/search/movie?query="

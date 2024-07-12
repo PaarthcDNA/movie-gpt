@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { lang } from './utils/languageConstanats'
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { API_KEY } from "./utils/constants";
+import { API_KEY, API_OPTIONS, IMG_CDN_URL, MOVIE_DATA_API } from "./utils/constants";
   // Access your API key as an environment variable (see "Set up your API key" above)
   const genAI = new GoogleGenerativeAI(API_KEY);
 
@@ -18,6 +18,16 @@ const GptSearchBar = () => {
   const gptSearchText = useRef(null)
   const langKey = useSelector(store => store.config.lang)
 
+  const NAME = '3 IDIOTS'
+  const fetchMovieData = async() => {
+    const data =await fetch(`https://api.themoviedb.org/3/search/movie?query=${NAME}&include_adult=false&language=en-US&page=1`, API_OPTIONS)
+   
+ 
+    const json = await data.json();
+    return json;
+
+  }
+
 
 
 
@@ -32,9 +42,10 @@ List 5  movies based on: ${gptSearchText?.current?.value} No infromation reqd in
     const text = await response.text();
     console.log(text)
   }
-  
+  fetchMovieData()
 
   return (
+    
     <div className='pt-[10%] flex justify-center'>
  
         <form className='w-1/2 bg-black grid grid-cols-12' onSubmit={async(e)=> {
