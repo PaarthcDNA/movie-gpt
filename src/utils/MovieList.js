@@ -3,7 +3,7 @@ import MoviesSlice from './moviesSlice'
 import MovieCard from './MovieCard'
 
 const MovieList = ({title,movies}) => {
-    console.log(movies)
+   
   return (
    
     <div className='px-6'>
