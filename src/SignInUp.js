@@ -30,7 +30,7 @@ const SignInUp = () => {
             setPassword("");
             setName("");
         }).catch((error) => {
-            console.error(error);
+      
         });
     };
 
